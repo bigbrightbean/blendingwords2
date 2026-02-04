@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Access Required</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 120px;
+    }
+    input {
+      font-size: 20px;
+      padding: 10px;
+    }
+    button {
+      font-size: 20px;
+      padding: 10px 20px;
+      margin-left: 8px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Enter Access Code</h1>
+<input type="password" id="pw" />
+<button onclick="go()">Enter</button>
+
+<script>
+  function go() {
+    if (document.getElementById('pw').value === 'READ123') {
+      window.location.href = 'app/index.html';
+    } else {
+      alert('Incorrect code');
+    }
+  }
+</script>
+
+</body>
+</html>
