@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Short Vowel A</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <h1>Short Vowel <span class="vowel">A</span></h1>
+
+  <!-- ================= SOUND MODE TOGGLE ================= -->
+  <div class="sound-toggle">
+    <button class="sound-btn" data-mode="2">2 sounds</button>
+    <button class="sound-btn active" data-mode="3">3 sounds</button>
+    <button class="generate-btn" data-gen="2">Generate 2s</button>
+    <button class="generate-btn" data-gen="3">Generate 3s</button>
+    <button id="flashcard-btn" class="generate-btn">Flashcard OFF</button>
+  </div>
+
+  <!-- ================= TABS ================= -->
+  <div class="tabs">
+    <button class="tab active" data-family="at">-at</button>
+    <button class="tab" data-family="an">-an</button>
+    <button class="tab" data-family="am">-am</button>
+    <button class="tab" data-family="ap">-ap</button>
+    <button class="tab" data-family="ag">-ag</button>
+    <button class="tab" data-family="ab">-ab</button>
+    <button class="tab" data-family="as">-as</button>
+    <button class="tab" data-family="ax">-ax</button>
+    <button class="tab" data-family="azz">-azz</button>
+    <button class="tab" data-family="ack">-ak / -ack</button>
+  </div>
+
+  <!-- ================= GENERATED WORDS ================= -->
+  <div class="generated-scale">
+    <div id="generated-area" class="generated-area"></div>
+  </div>
+
+  <!-- ================= -AT ================= -->
+  <section class="family active" data-family="at">
+    <ul class="word-container">
+      <li>cat</li>
+      <li>bat</li>
+      <li>rat</li>
+      <li>hat</li>
+      <li>mat</li>
+      <li>fat</li>
+      <li>pat</li>
+      <li>sat</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AN ================= -->
+  <section class="family" data-family="an">
+    <ul class="word-container">
+      <li>ban</li>
+      <li>can</li>
+      <li>fan</li>
+      <li>man</li>
+      <li>pan</li>
+      <li>ran</li>
+      <li>tan</li>
+      <li>van</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AM ================= -->
+  <section class="family" data-family="am">
+    <ul class="word-container">
+      <li>jam</li>
+      <li>ham</li>
+      <li>ram</li>
+      <li>dam</li>
+      <li>yam</li>
+      <li>Pam</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AP ================= -->
+  <section class="family" data-family="ap">
+    <ul class="word-container">
+      <li>map</li>
+      <li>cap</li>
+      <li>tap</li>
+      <li>lap</li>
+      <li>nap</li>
+      <li>gap</li>
+      <li>sap</li>
+      <li>zap</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AG ================= -->
+  <section class="family" data-family="ag">
+    <ul class="word-container">
+      <li>bag</li>
+      <li>rag</li>
+      <li>tag</li>
+      <li>wag</li>
+      <li>nag</li>
+      <li>lag</li>
+      <li>sag</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AB ================= -->
+  <section class="family" data-family="ab">
+    <ul class="word-container">
+      <li>cab</li>
+      <li>lab</li>
+      <li>jab</li>
+      <li>dab</li>
+      <li>nab</li>
+      <li>tab</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AS ================= -->
+  <section class="family" data-family="as">
+    <ul class="word-container">
+      <li>gas</li>
+      <li>has</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AX ================= -->
+  <section class="family" data-family="ax">
+    <ul class="word-container">
+      <li>fax</li>
+      <li>tax</li>
+      <li>wax</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AZZ ================= -->
+  <section class="family" data-family="azz">
+    <ul class="word-container">
+      <li>jazz</li>
+    </ul>
+  </section>
+
+  <!-- ================= -AK / -ACK ================= -->
+  <section class="family" data-family="ack">
+    <ul class="word-container">
+      <li>yak</li>
+      <li>back</li>
+      <li>pack</li>
+      <li>lack</li>
+    </ul>
+  </section>
+  
+  <!-- ================= FLASHCARD STAGE ================= -->
+  <div id="flashcard-stage" style="display:none;"></div>
+
+  <a href="index.html" class="back-btn">← Back to Home</a>
+
+  <script>
+    const targetVowel = 'a';
+    const digraphEndings = ['ll','ff','ss','zz','sh','ch','ck','ng','th'];
+
+    let soundMode = '3';
+    let isGenerateMode = false;
+
+    let flashcardOn = false;
+    let flashcardWords = [];
+    let flashcardIndex = 0;
+
+    const flashcardBtn = document.getElementById('flashcard-btn');
+
+    /* ================= AUDIO ================= */
+
+    const AUDIO_BASE_PATH = 'audio/short-a/';
+    const TEST_AUDIO_FILE = 'test.m4a';
+    const wordAudio = new Audio();
+
+    function playTestAudio() {
+      wordAudio.onerror = null;
+      wordAudio.src = AUDIO_BASE_PATH + TEST_AUDIO_FILE;
+      wordAudio.currentTime = 0;
+      wordAudio.play().catch(() => {});
+    }
+
+    function playWordAudio(word) {
+      const suffix = soundMode === '2' ? '2s' : '3s';
+      const audioPath = AUDIO_BASE_PATH + word + suffix + '.m4a';
+      wordAudio.onerror = () => playTestAudio();
+      wordAudio.src = audioPath;
+      wordAudio.currentTime = 0;
+      wordAudio.play().catch(() => {});
+    }
+
+    /* ================= SCALE GENERATED GRID ================= */
+
+    function scaleGeneratedGrid() {
+      const wrap = document.querySelector('.generated-scale');
+      const grid = document.querySelector('.generated-area');
+      if (!wrap || !grid) return;
+      const scale = Math.min(1, wrap.clientWidth / grid.scrollWidth);
+      grid.style.transform = `scale(${scale})`;
+    }
+
+    window.addEventListener('resize', scaleGeneratedGrid);
+
+    /* ================= RENDER WORDS ================= */
+
+    function renderWords() {
+      document.querySelectorAll('.word-container li').forEach(li => {
+        const word = li.dataset.word || li.textContent.trim().toLowerCase();
+        li.dataset.word = word;
+
+        if (!li.closest('.word-wrapper')) {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'word-wrapper';
+
+          const speaker = document.createElement('button');
+          speaker.className = 'speaker-btn';
+          speaker.textContent = '🔊';
+          speaker.onclick = e => {
+            e.stopPropagation();
+            playWordAudio(word);
+          };
+
+          li.parentNode.insertBefore(wrapper, li);
+          wrapper.appendChild(li);
+          wrapper.appendChild(speaker);
+        }
+
+        li.innerHTML = '';
+
+        if (soundMode === '2') {
+          li.innerHTML =
+            `<span>${word[0]}</span><span class="two-sound">${word.slice(1)}</span>`;
+        } else {
+          let i = 0;
+          while (i < word.length) {
+            const d = digraphEndings.find(x => word.startsWith(x, i));
+            if (d) {
+              li.innerHTML += `<span class="digraph">${d}</span>`;
+              i += d.length;
+            } else {
+              const ch = word[i];
+              li.innerHTML += `<span class="${ch === 'a' ? 'vowel' : ''}">${ch}</span>`;
+              i++;
+            }
+          }
+        }
+
+        li.onclick = () => {
+          li.classList.toggle('selected');
+          li.classList.remove('shake');
+          void li.offsetWidth;
+          li.classList.add('shake');
+        };
+      });
+    }
+
+    /* ================= HELPERS ================= */
+
+    function exitGenerateMode() {
+      isGenerateMode = false;
+      document.body.classList.remove('generate-mode');
+      document.getElementById('generated-area').innerHTML = '';
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    }
+
+    function exitFlashcardMode() {
+      flashcardOn = false;
+      flashcardBtn.textContent = 'Flashcard OFF';
+      flashcardBtn.classList.remove('on');
+      document.body.classList.remove('flashcard-mode');
+      document.querySelector('.flashcard-stage')?.remove();
+    }
+
+    function activateFirstTab() {
+      const firstTab = document.querySelector('.tab');
+      const firstFamily = document.querySelector('.family');
+
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.family').forEach(f => f.classList.remove('active'));
+
+      if (firstTab && firstFamily) {
+        firstTab.classList.add('active');
+        firstFamily.classList.add('active');
+      }
+    }
+
+    /* ================= SOUND BUTTONS ================= */
+
+    document.querySelectorAll('.sound-btn').forEach(btn => {
+      btn.onclick = () => {
+        exitGenerateMode();
+        exitFlashcardMode();
+
+        /* turn OFF Generate highlight */
+        clearGenerateButtons();
+
+        soundMode = btn.dataset.mode;
+
+        document.querySelectorAll('.sound-btn')
+          .forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        activateFirstTab();
+        renderWords();
+      };
+    });
+
+    /* ================= TABS ================= */
+
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.onclick = () => {
+        if (isGenerateMode) return;
+
+        exitFlashcardMode();
+
+        /* turn OFF Generate highlight */
+        clearGenerateButtons();
+
+        const family = tab.dataset.family;
+
+        document.querySelectorAll('.tab')
+          .forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.family')
+          .forEach(f => f.classList.remove('active'));
+
+        tab.classList.add('active');
+        document
+          .querySelector(`.family[data-family="${family}"]`)
+          .classList.add('active');
+
+        renderWords();
+      };
+    });
+
+
+    /* ================= GENERATE 2s / 3s ================= */
+
+    function clearGenerateButtons() {
+      document
+        .querySelectorAll('.generate-btn[data-gen]')
+        .forEach(b => b.classList.remove('active'));
+    }
+
+    document.querySelectorAll('.generate-btn[data-gen]').forEach(btn => {
+      btn.onclick = () => {
+        exitFlashcardMode();
+
+        isGenerateMode = true;
+        document.body.classList.add('generate-mode');
+
+        /* highlight Generate button (ORANGE) */
+        clearGenerateButtons();
+        btn.classList.add('active');
+
+        /* sync sound mode */
+        soundMode = btn.dataset.gen;
+
+        document.querySelectorAll('.sound-btn')
+          .forEach(b => b.classList.remove('active'));
+        document
+          .querySelector(`.sound-btn[data-mode="${soundMode}"]`)
+          ?.classList.add('active');
+
+        /* all tabs highlighted */
+        document.querySelectorAll('.tab')
+          .forEach(t => t.classList.add('active'));
+
+        const allWords = [...document.querySelectorAll('.family li')]
+          .map(li => li.textContent.toLowerCase());
+
+        const selected = allWords
+          .sort(() => 0.5 - Math.random())
+          .slice(0, 6);
+
+        const area = document.getElementById('generated-area');
+        area.innerHTML = '';
+
+        selected.forEach(w => {
+          area.innerHTML += `
+            <ul class="word-container">
+              <li>${w}</li>
+            </ul>
+          `;
+        });
+
+        renderWords();
+        scaleGeneratedGrid();
+      };
+    });
+
+
+    /* ================= FLASHCARD MODE ================= */
+
+    const flashcardStage = document.getElementById('flashcard-stage');
+
+    function getFlashcardWords() {
+      if (isGenerateMode) {
+        return [...document.querySelectorAll('#generated-area li')]
+          .map(li => li.dataset.word)
+          .filter(Boolean);
+      } else {
+        return [...document.querySelectorAll('.family.active li')]
+          .map(li => li.dataset.word)
+          .filter(Boolean);
+      }
+    }
+
+    function showFlashcardWord() {
+      flashcardWords = getFlashcardWords();
+      if (!flashcardWords.length) return;
+
+      flashcardIndex = 0;
+      renderFlashcard();
+    }
+
+    function renderFlashcard() {
+      const word = flashcardWords[flashcardIndex];
+
+      flashcardStage.innerHTML = `
+        <div class="flashcard-wrapper">
+          <button class="flashcard-arrow left">‹</button>
+
+          <ul class="word-container">
+            <li>${word}</li>
+          </ul>
+
+          <button class="flashcard-arrow right">›</button>
+        </div>
+      `;
+
+      renderWords();
+
+      flashcardStage.querySelector('.left').onclick = () => {
+        flashcardIndex =
+          (flashcardIndex - 1 + flashcardWords.length) % flashcardWords.length;
+        renderFlashcard();
+      };
+
+      flashcardStage.querySelector('.right').onclick = () => {
+        flashcardIndex =
+          (flashcardIndex + 1) % flashcardWords.length;
+        renderFlashcard();
+      };
+    }
+
+    function enterFlashcardMode() {
+      document.body.classList.add('flashcard-mode');
+      flashcardStage.style.display = 'block';
+      showFlashcardWord();
+    }
+
+    function exitFlashcardMode() {
+      document.body.classList.remove('flashcard-mode');
+      flashcardStage.style.display = 'none';
+      flashcardStage.innerHTML = '';
+    }
+
+    /* ================= FLASHCARD BUTTON ================= */
+
+    flashcardBtn.onclick = () => {
+      flashcardOn = !flashcardOn;
+      flashcardBtn.textContent = flashcardOn ? 'Flashcard ON' : 'Flashcard OFF';
+      flashcardBtn.classList.toggle('on', flashcardOn);
+
+      flashcardOn ? enterFlashcardMode() : exitFlashcardMode();
+    };
+
+    /* ================= AUTO REFRESH WHEN MODE CHANGES ================= */
+
+    function refreshFlashcardIfOn() {
+      if (flashcardOn) showFlashcardWord();
+    }
+
+    document.querySelectorAll('.sound-btn, .generate-btn[data-gen], .tab')
+      .forEach(btn => btn.addEventListener('click', refreshFlashcardIfOn));
+
+  
+    /* ================= INIT ================= */
+
+    activateFirstTab();
+    renderWords();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,559 @@
+body {
+  font-family: "Arial Rounded MT Bold", Arial, sans-serif;
+  background-color: #f9f9f9;
+  text-align: center;
+  margin: 0;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 56px;
+  margin-bottom: 40px;
+  font-weight: bold;
+}
+
+.word-container {
+  list-style: none;
+  padding: 0;
+  max-width: 520px;
+  margin: 0 auto 50px;
+}
+
+.word-container li {
+  font-size: 94px;
+  font-weight: bold;
+  letter-spacing: 0.10em;
+  background: white;
+  padding: 30px 0;
+  margin-bottom: 28px;
+  border-radius: 14px;
+  white-space: nowrap;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+/* individual letters */
+.word-container li span {
+  position: relative;
+  display: inline-block;
+  margin: 0 0.05em;
+}
+
+/* dot under each letter */
+.word-container li span::after {
+  content: "•";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.8em;
+  font-size: 0.5em;
+  color: #111;
+}
+
+/* short vowel highlight */
+.word-container li span.vowel {
+  color: red !important;
+}
+
+/* back button */
+.back-btn {
+  display: inline-block;
+  margin-top: 20px;
+  text-decoration: none;
+  font-size: 20px;
+  color: #333;
+  font-weight: bold;
+}
+
+
+
+
+
+
+
+
+/* digraph endings like ll, ss, ck, sh */
+.digraph {
+  position: relative;
+  display: inline-block;
+  text-decoration: underline;
+}
+
+/* ONE dot under the whole digraph */
+.digraph::after {
+  content: "•";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.8em;
+  font-size: 0.5em;
+  color: #111;
+}
+
+
+
+
+
+
+
+
+
+/* ================= TEST PAGE SUPPORT ================= */
+
+/* individual letters inside test boxes */
+.test-box span {
+  position: relative;
+  display: inline-block;
+  margin: 0 0.05em;
+}
+
+/* dot under each letter (same as lesson pages) */
+.test-box span::after {
+  content: "•";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.8em;
+  font-size: 0.5em;
+  color: #111;
+}
+
+/* short vowel highlight */
+.test-box span.vowel {
+  color: red !important;
+}
+
+/* digraphs: ll ff ss sh ch th ck ng */
+.test-box .digraph {
+  position: relative;
+  display: inline-block;
+  text-decoration: underline;
+}
+
+/* ONE dot under digraph */
+.test-box .digraph::after {
+  content: "•";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.8em;
+  font-size: 0.5em;
+  color: #111;
+}
+
+/* ng special light grey */
+.test-box .digraph.ng {
+  color: #aaa;
+}
+
+
+
+
+
+
+
+
+
+
+/* make word boxes clickable */
+.word-container li {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+/* selected (tapped) state */
+.word-container li.selected {
+  background-color: #ffe066; /* soft yellow */
+}
+
+
+@keyframes shake {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-4px); }
+  40%  { transform: translateX(4px); }
+  60%  { transform: translateX(-3px); }
+  80%  { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+
+.word-container li.shake {
+  animation: shake 0.35s cubic-bezier(.36,.07,.19,.97);
+}
+
+
+
+
+
+
+.test-box {
+  cursor: pointer;
+}
+
+.test-box.selected {
+  background-color: #ffe066;
+}
+
+
+@keyframes shake {
+  0%   { transform: translateX(0); }
+  20%  { transform: translateX(-4px); }
+  40%  { transform: translateX(4px); }
+  60%  { transform: translateX(-3px); }
+  80%  { transform: translateX(3px); }
+  100% { transform: translateX(0); }
+}
+
+/* when box is pressed */
+.test-box.shake {
+  animation: shake 0.35s cubic-bezier(.36,.07,.19,.97);
+}
+
+
+
+
+
+
+
+
+
+
+/* ======================================================
+   PHONICS UI – SHORT VOWEL PAGES (short-a.html etc.)
+   Controls tabs, sound toggles, and generate grid
+   ====================================================== */
+
+
+/* ======================================================
+   TAB CONTROLS (Word family tabs)
+   Used in: short-a.html, short-e.html, etc.
+   ====================================================== */
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 50px;
+}
+
+.tab {
+  font-size: 24px;
+  font-weight: bold;
+  padding: 12px 22px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Active tab (yellow highlight) */
+.tab.active {
+  background: #ffe066;
+}
+
+
+/* ======================================================
+   WORD FAMILY VISIBILITY
+   Controls which wordlist is shown
+   Used in: short-a.html etc.
+   ====================================================== */
+
+.family {
+  display: none;
+}
+
+.family.active {
+  display: block;
+}
+
+
+/* ======================================================
+   SOUND MODE TOGGLE (2 sounds / 3 sounds / Generate)
+   Used in: short-a.html
+   ====================================================== */
+
+.sound-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 35px;
+}
+
+/* 2 sounds / 3 sounds buttons */
+.sound-btn {
+  font-size: 26px;
+  font-weight: bold;
+  padding: 12px 26px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* Active sound mode (yellow highlight) */
+.sound-btn.active {
+  background: #ffe066;
+}
+
+
+/* ======================================================
+   2-SOUND MODE VISUALS (CV chunking)
+   Used when "2 sounds" or "Generate 2s" is active
+   ====================================================== */
+
+/* Ending chunk (e.g. "at", "ap") */
+.two-sound {
+  color: red !important;
+  position: relative;
+}
+
+/* Single dot under the whole ending */
+.two-sound::after {
+  content: "•";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -0.8em;
+  font-size: 0.5em;
+  color: #111;
+}
+
+
+/* ======================================================
+   GENERATE BUTTONS (Generate 2s / Generate 3s)
+   Used in: short-a.html
+   ====================================================== */
+
+.generate-btn {
+  font-size: 26px;
+  font-weight: bold;
+  padding: 12px 22px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+
+/* ======================================================
+   GENERATE BUTTON ACTIVE STATE
+   ====================================================== */
+
+/* Bright orange when Generate 2s / 3s is active */
+.generate-btn.active {
+  background: #ff9f1c;   /* bright orange */
+  color: #000;
+}
+
+/* ======================================================
+   GENERATE BUTTON PRESS FEEL
+   ====================================================== */
+
+.generate-btn {
+  position: relative;
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease,
+    background 0.15s ease;
+}
+
+/* default raised look */
+.generate-btn {
+  box-shadow: 0 6px 0 rgba(0,0,0,0.18),
+              0 10px 20px rgba(0,0,0,0.15);
+}
+
+/* press down effect */
+.generate-btn:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.18),
+              0 6px 12px rgba(0,0,0,0.12);
+}
+
+/* active Generate (orange ON) */
+.generate-btn.active {
+  background: #ff9f1c; /* bright orange */
+  color: #000;
+}
+
+/* active + pressed */
+.generate-btn.active:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.25),
+              0 6px 12px rgba(0,0,0,0.2);
+}
+
+
+/* ======================================================
+   GENERATED GRID — FIXED COLUMNS, SCALE TO FIT
+   Used only during Generate 2s / Generate 3s
+   ====================================================== */
+
+.generated-scale {
+  width: 100%;
+  overflow: hidden;              /* NO scrollbars */
+  display: flex;
+  justify-content: center;       /* center grid */
+}
+
+.generated-area {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* FIXED columns */
+  gap: 36px;
+  padding: 24px;
+  transform-origin: top center;  /* scale from center */
+}
+
+
+/* ======================================================
+   GENERATE MODE OVERRIDES
+   Hides normal wordlists during drills
+   Used in: short-a.html
+   ====================================================== */
+
+/* Hide all word families when Generate is active */
+.generate-mode .family {
+  display: none !important;
+}
+
+
+
+/* ======================================================
+   WORD + SPEAKER LAYOUT (Unified card look)
+   ====================================================== */
+
+.word-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: stretch; /* IMPORTANT: equal height */
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+/* ======================================================
+   WORD BOX (wider for single wordlist)
+   ====================================================== */
+
+.word-container li {
+  min-width: 420px;     /* makes word box wider */
+  text-align: center;
+}
+
+
+
+/* ======================================================
+   SPEAKER BUTTON (white box, same height)
+   ====================================================== */
+
+.speaker-btn {
+  width: 120px;
+  border: none;
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  font-size: 48px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.speaker-btn:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.speaker-btn:active {
+  transform: scale(0.96);
+}
+
+/* remove default button styles */
+.speaker-btn:focus {
+  outline: none;
+}
+
+/* remove bottom margin from li since wrapper controls spacing */
+.word-wrapper li {
+  margin-bottom: 0;
+}
+
+
+/* ======================================================
+   FLASHCARD MODE
+   ====================================================== */
+
+#flashcard-btn.on {
+  background: #3ddb77; /* bright green */
+  color: #000;
+}
+
+/* hide normal content */
+.flashcard-mode .family,
+.flashcard-mode .generated-scale {
+  display: none !important;
+}
+
+/* flashcard container */
+#flashcard-stage {
+  margin: 60px auto 0;
+  display: flex;
+  justify-content: center;
+}
+
+/* layout */
+.flashcard-wrapper {
+  display: flex;
+  align-items: stretch;
+  gap: 28px;
+}
+
+/* arrows */
+.flashcard-arrow {
+  width: 120px;
+  background: transparent;
+  border: none;
+  font-size: 72px;
+  cursor: pointer;
+  opacity: 0.35;
+}
+
+.flashcard-arrow:hover {
+  opacity: 1;
+}
+
+/* slightly bigger word */
+.flashcard-mode .word-container li {
+  font-size: 114px; /* ~20px bigger than 94px */
+}
+
+/* ======================================================
+   FLASHCARD SIZE TUNING (SINGLE WORD ONLY)
+   ====================================================== */
+
+/* Make the white word box bigger */
+.flashcard-mode .word-wrapper {
+  padding: 78px 46px;       /* controls box size *//*First number → top/bottom/Second number → left/right*/
+  min-width: 520px;
+  min-height: 220px;
+}
+
+/* Increase word font slightly */
+.flashcard-mode .word-container li {
+  font-size: 132px;        /* increase from previous ~114px */
+  line-height: 1.1;
+}
+
+/* Make speaker box match word box height */
+.flashcard-mode .speaker-btn {
+  font-size: 56px;
+  padding: 0 26px;
+  height: auto;
+  align-self: stretch;     /* key line: same height as word box */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
